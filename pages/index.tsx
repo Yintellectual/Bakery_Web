@@ -12,6 +12,8 @@ import getBase64ImageUrl from '../utils/generateBlurPlaceholder'
 import type { ImageProps } from '../utils/types'
 import { useLastViewedPhoto } from '../utils/useLastViewedPhoto'
 import test from '../utils/rest/rest'
+import retrieveCakeByPhoto from '../utils/rest/retrieveCakeByPhoto'
+import client from "../utils/rest/client"
 
 const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
   const router = useRouter()
@@ -67,7 +69,10 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               our first ever in-person conference!
             </p>
             <button className="z-10 mt-6 rounded-lg border border-white bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-white/10 hover:text-white md:mt-4"
-              onClick={test}>测试按钮</button>
+              onClick={()=>{
+                //test()
+                retrieveCakeByPhoto('link1')
+              }}>测试按钮</button>
             <a
               className="invisible pointer z-10 mt-6 rounded-lg border border-white bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-white/10 hover:text-white md:mt-4"
               href="https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-cloudinary&project-name=nextjs-image-gallery&repository-name=with-cloudinary&env=NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,CLOUDINARY_FOLDER&envDescription=API%20Keys%20from%20Cloudinary%20needed%20to%20run%20this%20application"
@@ -77,7 +82,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               Clone and Deploy
             </a>
           </div>
-          {images.map(({ id, public_id, format, blurDataUrl }) => (
+          {images.map(({ id, public_id, format, blurDataUrl,tags }) => (
             <Link
               key={id}
               href={`/?photoId=${id}`}
@@ -102,9 +107,10 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               />
               <div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-gray-800 opacity-70">
                 <h3 className="text-xl text-white font-bold">
-                  Hey, I Am The Big Boss</h3>
-                <p className="mt-2 text-sm text-gray-300">Some description text. Some dummy text here. Welcome to
-                  KindaCode.com</p>
+                  {public_id}</h3>
+                <p className="mt-2 text-sm text-gray-300">{tags.map(tag=>{
+                  return (<span className=" rounded px-1 mx-1 bg-white text-sm font-semibold text-black transition  ">{tag}</span>);
+                })}</p>
               </div>
             </Link>
           ))}
@@ -173,7 +179,36 @@ export async function getStaticProps() {
 
   for (let i = 0; i < reducedResults.length; i++) {
     reducedResults[i].blurDataUrl = imagesWithBlurDataUrls[i]
+    const cake = await retrieveCakeByPhoto(reducedResults[i].public_id);
+    console.log(cake);
+    if(cake){
+      reducedResults[i].tags = cake.tags;
+    }
   }
+
+  //TODO: for each picture, use the public_id as key. Search for metadata, display tags if any
+  /*for (let i = 0; i < reducedResults.length; i++) {
+    let public_id = reducedResults[i].public_id;
+    retrieveByPhoto(public_id).then(response=>{
+      let cakes = response.entity._embedded.cakes;
+      if(cakes.length==0){
+        //create new picture metadata with tag "sample"
+        let newCake ={ photo:public_id, tags:["sample","cake"] }
+        client({
+          method: 'POST',
+          path: 'http://localhost:8080/api/cakes',
+          entity: newCake,
+          headers: {'Content-Type': 'application/json'}
+        })
+        console.log(public_id);
+      }else if(cakes.length==1){
+        reducedResults[i].tags = cakes[0].tags;
+        console.log(reducedResults[i].tags +" : "+ public_id)
+      }else{
+        //exception: repeated pictures
+      }
+    })
+  }*/
 
   return {
     props: {

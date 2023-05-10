@@ -10,5 +10,7 @@ export default function test(){
     ).then(response=>{
         console.log(response.entity._embedded.cakes.length);
     })
-
 }
+
+
+
