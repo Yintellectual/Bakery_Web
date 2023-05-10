@@ -15,6 +15,7 @@ import downloadPhoto from '../utils/downloadPhoto'
 import { range } from '../utils/range'
 import type { ImageProps, SharedModalProps } from '../utils/types'
 import Twitter from './Icons/Twitter'
+import Edit from './Icons/Edit'
 
 export default function SharedModal({
   index,
@@ -71,7 +72,8 @@ export default function SharedModal({
                 exit="exit"
                 className="absolute"
               >
-                <Image
+                <div className="flex flex-col md:flex-row">
+                  <div className="bg-green md:h-auto md:w-7/12"><Image
                   src={`https://res.cloudinary.com/${
                     process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
                   }/image/upload/c_scale,${navigation ? 'w_1280' : 'w_1920'}/${
@@ -82,7 +84,9 @@ export default function SharedModal({
                   priority
                   alt="Next.js Conf image"
                   onLoadingComplete={() => setLoaded(true)}
-                />
+                  /></div>
+                  <div className="bg-white flex items-center p-6 justify-center hidden md:visible md:w-5/12"></div>
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>
@@ -124,7 +128,7 @@ export default function SharedModal({
                     title="Open fullsize version"
                     rel="noreferrer"
                   >
-                    <ArrowTopRightOnSquareIcon className="h-5 w-5" />
+                    <Edit className="h-5 w-5" />
                   </a>
                 ) : (
                   <a

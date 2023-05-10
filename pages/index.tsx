@@ -177,38 +177,18 @@ export async function getStaticProps() {
   })
   const imagesWithBlurDataUrls = await Promise.all(blurImagePromises)
 
+  //TODO: for each picture, use the public_id as key. Search for metadata, display tags if any
   for (let i = 0; i < reducedResults.length; i++) {
     reducedResults[i].blurDataUrl = imagesWithBlurDataUrls[i]
     const cake = await retrieveCakeByPhoto(reducedResults[i].public_id);
     console.log(cake);
     if(cake){
       reducedResults[i].tags = cake.tags;
+    }else{
+      reducedResults[i].tags = [];
     }
   }
 
-  //TODO: for each picture, use the public_id as key. Search for metadata, display tags if any
-  /*for (let i = 0; i < reducedResults.length; i++) {
-    let public_id = reducedResults[i].public_id;
-    retrieveByPhoto(public_id).then(response=>{
-      let cakes = response.entity._embedded.cakes;
-      if(cakes.length==0){
-        //create new picture metadata with tag "sample"
-        let newCake ={ photo:public_id, tags:["sample","cake"] }
-        client({
-          method: 'POST',
-          path: 'http://localhost:8080/api/cakes',
-          entity: newCake,
-          headers: {'Content-Type': 'application/json'}
-        })
-        console.log(public_id);
-      }else if(cakes.length==1){
-        reducedResults[i].tags = cakes[0].tags;
-        console.log(reducedResults[i].tags +" : "+ public_id)
-      }else{
-        //exception: repeated pictures
-      }
-    })
-  }*/
 
   return {
     props: {
