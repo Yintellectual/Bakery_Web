@@ -100,6 +100,12 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
                   (max-width: 1536px) 33vw,
                   25vw"
               />
+              <div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-gray-800 opacity-70">
+                <h3 className="text-xl text-white font-bold">
+                  Hey, I Am The Big Boss</h3>
+                <p className="mt-2 text-sm text-gray-300">Some description text. Some dummy text here. Welcome to
+                  KindaCode.com</p>
+              </div>
             </Link>
           ))}
         </div>
