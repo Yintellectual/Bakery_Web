@@ -24,8 +24,6 @@ export default function Modal({
   const [direction, setDirection] = useState(0);
   const [curIndex, setCurIndex] = useState(index);
 
-  console.log("Modal: " + JSON.stringify(cakeSchema));
-
   function handleClose() {
     router.push("/", undefined, { shallow: true });
     onClose();

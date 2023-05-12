@@ -9,9 +9,8 @@ import Logo from "../components/Icons/Logo";
 import Modal from "../components/Modal";
 import cloudinary from "../utils/cloudinary";
 import getBase64ImageUrl from "../utils/generateBlurPlaceholder";
-import type { Attribute, ImageProps, Schema } from "../utils/types";
+import type { ImageProps, Schema } from "../utils/types";
 import { useLastViewedPhoto } from "../utils/useLastViewedPhoto";
-import test from "../utils/rest/rest";
 import retrieveCakeByPhoto from "../utils/rest/retrieveCakeByPhoto";
 import client from "../utils/rest/client";
 import cakeSchema from "../utils/rest/cakeSchema";
@@ -122,7 +121,10 @@ const Home: NextPage = ({
                 <p className="mt-2 text-sm text-gray-300">
                   {tags.map((tag) => {
                     return (
-                      <span className=" mx-1 rounded bg-white px-1 text-sm font-semibold text-black transition  ">
+                      <span
+                        key={"tag_" + tag + public_id}
+                        className=" mx-1 rounded bg-white px-1 text-sm font-semibold text-black transition  "
+                      >
                         {tag}
                       </span>
                     );

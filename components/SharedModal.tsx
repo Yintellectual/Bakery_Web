@@ -17,6 +17,9 @@ import { range } from "../utils/range";
 import type { ImageProps, SharedModalProps } from "../utils/types";
 import Twitter from "./Icons/Twitter";
 import { Input } from "postcss";
+import client from "../utils/rest/client";
+import follow from "../utils/rest/follow";
+import FormForSchema from "./FormForScheme";
 
 export default function SharedModal({
   index,
@@ -31,11 +34,29 @@ export default function SharedModal({
   const [loaded, setLoaded] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
+  const host = process.env.NEXT_PUBLIC_METADATA_SERVER;
+  const root = process.env.NEXT_PUBLIC_METADATA_ROOT;
+
   function toggleShowForm() {
     setShowForm(!showForm);
   }
 
-  function handleSubmit() {}
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const newCake = {
+      photo: event.target.photo.value,
+      tags: ["sample", "cake"],
+    };
+    return follow(client, host + root, ["cakes"]).then((response) => {
+      let href = response.entity._links.self.href;
+      return client({
+        method: "POST",
+        path: href,
+        entity: newCake,
+        headers: { "Content-Type": "application/json" },
+      });
+    });
+  };
 
   let filteredImages = images?.filter((img: ImageProps) =>
     range(index - 15, index + 15).includes(img.id)
@@ -57,24 +78,14 @@ export default function SharedModal({
 
   let currentImage = images ? images[index] : currentPhoto;
 
-  console.log("SharedModal:>>>>");
   let arr = Object.keys(cakeSchema.properties).map((attribute) => {
-    console.log("title:    " + cakeSchema.properties[attribute].title);
-    console.log("type:     " + cakeSchema.properties[attribute].type);
-    console.log("readOnly: " + cakeSchema.properties[attribute].readOnly);
-    console.log(cakeSchema.properties[attribute].items);
     if (cakeSchema.properties[attribute].type == "string") {
-      console.log("input");
       return "map-input";
     } else if (cakeSchema.properties[attribute].type == "array") {
-      console.log("arr");
       return "map-arr";
     } else {
-      console.log("else");
     }
   });
-
-  console.log(arr);
 
   return (
     <MotionConfig
@@ -150,16 +161,11 @@ export default function SharedModal({
                 </>
               )}
               <div style={showForm ? {} : { display: "none" }}>
-                <div className="fixed inset-1/4 z-10 flex items-center justify-center bg-white opacity-90">
-                  <form action="/api/form" method="post">
-                    <label htmlFor="first">First name:</label>
-                    <input type="text" id="first" name="first" />
-                    <label htmlFor="last">Last name:</label>
-                    <input type="text" id="last" name="last" />
-                    <button className="" type="submit">
-                      Submit
-                    </button>
-                  </form>
+                <div className="fixed inset-x-14 inset-y-1/4 z-10 flex items-center justify-center bg-white opacity-90 md:inset-1/4">
+                  <FormForSchema
+                    schema={cakeSchema}
+                    entity={currentImage}
+                  ></FormForSchema>
                 </div>
               </div>
               <div className="absolute right-0 top-0 flex items-center gap-2 p-3 text-white">

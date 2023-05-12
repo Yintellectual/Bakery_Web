@@ -21,16 +21,16 @@ export interface SharedModalProps {
 }
 
 export interface Attribute {
-  title: String;
+  title: string;
   readOnly: boolean;
-  type: String;
+  type: string;
   items?: object;
 }
 
 export interface Schema {
-  title: String;
+  title: string;
   properties: object;
   definitions?: object;
-  type: String;
-  $schema?: String;
+  type: string;
+  $schema?: string;
 }
