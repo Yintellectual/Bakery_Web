@@ -16,7 +16,6 @@ import downloadPhoto from "../utils/downloadPhoto";
 import { range } from "../utils/range";
 import type { ImageProps, SharedModalProps } from "../utils/types";
 import Twitter from "./Icons/Twitter";
-import { Input } from "postcss";
 import client from "../utils/rest/client";
 import follow from "../utils/rest/follow";
 import FormForSchema from "./FormForScheme";
@@ -77,15 +76,6 @@ export default function SharedModal({
   });
 
   let currentImage = images ? images[index] : currentPhoto;
-
-  let arr = Object.keys(cakeSchema.properties).map((attribute) => {
-    if (cakeSchema.properties[attribute].type == "string") {
-      return "map-input";
-    } else if (cakeSchema.properties[attribute].type == "array") {
-      return "map-arr";
-    } else {
-    }
-  });
 
   return (
     <MotionConfig
