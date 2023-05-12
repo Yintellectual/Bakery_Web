@@ -16,6 +16,7 @@ import downloadPhoto from "../utils/downloadPhoto";
 import { range } from "../utils/range";
 import type { ImageProps, SharedModalProps } from "../utils/types";
 import Twitter from "./Icons/Twitter";
+import { Input } from "postcss";
 
 export default function SharedModal({
   index,
@@ -25,6 +26,7 @@ export default function SharedModal({
   navigation,
   currentPhoto,
   direction,
+  cakeSchema,
 }: SharedModalProps) {
   const [loaded, setLoaded] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -32,6 +34,8 @@ export default function SharedModal({
   function toggleShowForm() {
     setShowForm(!showForm);
   }
+
+  function handleSubmit() {}
 
   let filteredImages = images?.filter((img: ImageProps) =>
     range(index - 15, index + 15).includes(img.id)
@@ -53,6 +57,25 @@ export default function SharedModal({
 
   let currentImage = images ? images[index] : currentPhoto;
 
+  console.log("SharedModal:>>>>");
+  let arr = Object.keys(cakeSchema.properties).map((attribute) => {
+    console.log("title:    " + cakeSchema.properties[attribute].title);
+    console.log("type:     " + cakeSchema.properties[attribute].type);
+    console.log("readOnly: " + cakeSchema.properties[attribute].readOnly);
+    console.log(cakeSchema.properties[attribute].items);
+    if (cakeSchema.properties[attribute].type == "string") {
+      console.log("input");
+      return "map-input";
+    } else if (cakeSchema.properties[attribute].type == "array") {
+      console.log("arr");
+      return "map-arr";
+    } else {
+      console.log("else");
+    }
+  });
+
+  console.log(arr);
+
   return (
     <MotionConfig
       transition={{
@@ -65,7 +88,7 @@ export default function SharedModal({
         {...handlers}
       >
         {/* Main image */}
-        <div className="w-full overflow-hidden">
+        <div className=" w-full overflow-hidden">
           <div className="relative flex aspect-[3/2] items-center justify-center">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
@@ -78,7 +101,7 @@ export default function SharedModal({
                 className="absolute"
               >
                 <div>
-                  <div style={showForm ? { display: "none" } : {}}>
+                  <div>
                     <Image
                       src={`https://res.cloudinary.com/${
                         process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
@@ -92,60 +115,6 @@ export default function SharedModal({
                       onLoadingComplete={() => setLoaded(true)}
                     />
                   </div>
-                  <div style={showForm ? {} : { display: "none" }}>
-                    <div className="w-full max-w-xs">
-                      <form className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
-                        <div className="mb-4">
-                          <label
-                            className="mb-2 block text-sm font-bold text-gray-700"
-                            htmlFor="username"
-                          >
-                            Username
-                          </label>
-                          <input
-                            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                            id="username"
-                            type="text"
-                            placeholder="Username"
-                          />
-                        </div>
-                        <div className="mb-6">
-                          <label
-                            className="mb-2 block text-sm font-bold text-gray-700"
-                            htmlFor="password"
-                          >
-                            Password
-                          </label>
-                          <input
-                            className="focus:shadow-outline mb-3 w-full appearance-none rounded border border-red-500 px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                            id="password"
-                            type="password"
-                            placeholder="******************"
-                          />
-                          <p className="text-xs italic text-red-500">
-                            Please choose a password.
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <button
-                            className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-                            type="button"
-                          >
-                            Sign In
-                          </button>
-                          <a
-                            className="inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800"
-                            href="#"
-                          >
-                            Forgot Password?
-                          </a>
-                        </div>
-                      </form>
-                      <p className="text-center text-xs text-gray-500">
-                        &copy;2020 Acme Corp. All rights reserved.
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -153,7 +122,7 @@ export default function SharedModal({
         </div>
 
         {/* Buttons + bottom nav bar */}
-        <div className="absolute inset-0 mx-auto flex max-w-7xl items-center justify-center">
+        <div className="absolute inset-0   mx-auto flex max-w-7xl items-center justify-center">
           {/* Buttons */}
           {loaded && (
             <div className="relative aspect-[3/2] max-h-full w-full">
@@ -168,6 +137,7 @@ export default function SharedModal({
                       <ChevronLeftIcon className="h-6 w-6" />
                     </button>
                   )}
+
                   {index + 1 < images.length && (
                     <button
                       className="absolute right-3 top-[calc(50%-16px)] rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white focus:outline-none"
@@ -179,6 +149,19 @@ export default function SharedModal({
                   )}
                 </>
               )}
+              <div style={showForm ? {} : { display: "none" }}>
+                <div className="fixed inset-1/4 z-10 flex items-center justify-center bg-white opacity-90">
+                  <form action="/api/form" method="post">
+                    <label htmlFor="first">First name:</label>
+                    <input type="text" id="first" name="first" />
+                    <label htmlFor="last">Last name:</label>
+                    <input type="text" id="last" name="last" />
+                    <button className="" type="submit">
+                      Submit
+                    </button>
+                  </form>
+                </div>
+              </div>
               <div className="absolute right-0 top-0 flex items-center gap-2 p-3 text-white">
                 {navigation ? (
                   <a
