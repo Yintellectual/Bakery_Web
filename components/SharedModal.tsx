@@ -33,29 +33,9 @@ export default function SharedModal({
   const [loaded, setLoaded] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
-  const host = process.env.NEXT_PUBLIC_METADATA_SERVER;
-  const root = process.env.NEXT_PUBLIC_METADATA_ROOT;
-
   function toggleShowForm() {
     setShowForm(!showForm);
   }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const newCake = {
-      photo: event.target.photo.value,
-      tags: ["sample", "cake"],
-    };
-    return follow(client, host + root, ["cakes"]).then((response) => {
-      let href = response.entity._links.self.href;
-      return client({
-        method: "POST",
-        path: href,
-        entity: newCake,
-        headers: { "Content-Type": "application/json" },
-      });
-    });
-  };
 
   let filteredImages = images?.filter((img: ImageProps) =>
     range(index - 15, index + 15).includes(img.id)

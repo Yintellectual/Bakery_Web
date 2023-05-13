@@ -1,4 +1,9 @@
 import { Attribute, ImageProps, Schema } from "../utils/types";
+import React from "react";
+import TagsInput from "./TagsInput";
+import client from "../utils/rest/client";
+import follow from "../utils/rest/follow";
+
 export default function CakeFormForSchema({
   schema,
   entity,
@@ -22,6 +27,33 @@ export interface Attribute {
   items?: object;
 }
     * */
+
+  const host = process.env.NEXT_PUBLIC_METADATA_SERVER;
+  const root = process.env.NEXT_PUBLIC_METADATA_ROOT;
+
+  const [tags, setTags] = React.useState([
+    { id: "Thailand", text: "Thailand" },
+    { id: "India", text: "India" },
+    { id: "Vietnam", text: "Vietnam" },
+    { id: "Turkey", text: "Turkey" },
+  ]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const newCake = {
+      photo: entity.public_id,
+      tags: tags.map((tag) => tag.text),
+    };
+    return follow(client, host + root, ["cakes"]).then((response) => {
+      let href = response.entity._links.self.href;
+      return client({
+        method: "POST",
+        path: href,
+        entity: newCake,
+        headers: { "Content-Type": "application/json" },
+      });
+    });
+  };
 
   const properties = schema.properties;
   let inputs = Object.keys(properties).map((key) => {
@@ -51,6 +83,7 @@ export interface Attribute {
       return (
         <>
           <label key={"label_" + title}>{title}</label>
+          <TagsInput />
         </>
       );
     }
@@ -58,7 +91,10 @@ export interface Attribute {
 
   return (
     <div className="w-full max-w-xs">
-      <form className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
+      <form
+        className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md"
+        onSubmit={handleSubmit}
+      >
         <div className="mb-4">{inputs}</div>
         <button className="" type="submit">
           Submit
