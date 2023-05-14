@@ -18,7 +18,7 @@ import type { ImageProps, SharedModalProps } from "../utils/types";
 import Twitter from "./Icons/Twitter";
 import client from "../utils/rest/client";
 import follow from "../utils/rest/follow";
-import FormForSchema from "./FormForScheme";
+import FormForSchema from "./CakeForm";
 
 export default function SharedModal({
   index,
@@ -130,8 +130,12 @@ export default function SharedModal({
                   )}
                 </>
               )}
-              <div style={showForm ? {} : { display: "none" }}>
-                <div className="fixed inset-x-14 inset-y-1/4 z-10 flex items-center justify-center bg-white opacity-90 md:inset-1/4">
+
+              <div
+                className={`max-h-full overflow-y-auto bg-white`}
+                style={showForm ? {} : { display: "none" }}
+              >
+                <div className="mx-auto max-w-7xl px-20 py-24 sm:py-32 md:px-20">
                   <FormForSchema
                     schema={cakeSchema}
                     entity={currentImage}

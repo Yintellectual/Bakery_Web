@@ -30,7 +30,6 @@ export default function Carousel({
     closeModal();
   });
 
-  console.log("Carousel: " + cakeSchema);
   return (
     <div className="fixed inset-0 flex items-center justify-center">
       <button

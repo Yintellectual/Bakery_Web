@@ -200,7 +200,6 @@ export async function getStaticProps() {
   for (let i = 0; i < reducedResults.length; i++) {
     reducedResults[i].blurDataUrl = imagesWithBlurDataUrls[i];
     const cake = await retrieveCakeByPhoto(reducedResults[i].public_id);
-    console.log(cake);
     if (cake) {
       reducedResults[i].tags = cake.tags;
     } else {

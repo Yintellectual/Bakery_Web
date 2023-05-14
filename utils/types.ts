@@ -26,7 +26,6 @@ export interface Attribute {
   type: string;
   items?: object;
 }
-
 export interface Schema {
   title: string;
   properties: object;
