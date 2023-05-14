@@ -48,6 +48,7 @@ export default function TagsInput() {
       tags={tags}
       name="tags"
       placeHolder="tags"
+      suggestions={tags}
       delimiters={delimiters}
       handleDelete={handleDelete}
       handleAddition={handleAddition}
