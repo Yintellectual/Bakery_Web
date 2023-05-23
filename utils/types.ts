@@ -33,3 +33,7 @@ export interface Schema {
   type: string;
   $schema?: string;
 }
+export interface Tag {
+  id: string;
+  text: string;
+}
