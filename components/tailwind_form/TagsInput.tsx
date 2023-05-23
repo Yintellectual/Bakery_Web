@@ -45,7 +45,7 @@ export default function TagsInput({
           tags: "",
           tagInput: "",
           tagInputField:
-            " block w-full text-center rounded-md  py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600  sm:leading-6",
+            "block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
           selected: "mb-4 selectedClass",
           tag: "mr-2 my-2 rounded bg-gray-300 px-1 py-1 text-sm font-semibold text-black transition",
           remove: "ml-2 px-1 py-1 text-sm",
