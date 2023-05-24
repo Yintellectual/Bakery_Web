@@ -57,9 +57,10 @@ export interface Attribute {
 
   render() {
     const fields = [];
-    fields.push(<Input label="名字" name="username" />);
+    fields.push(<Input key="username" label="名字" name="username" />);
     fields.push(
       <TagsInput
+        key="tags"
         label="标签"
         name="tags"
         setTags={(t) => {
