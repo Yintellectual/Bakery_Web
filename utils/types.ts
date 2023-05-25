@@ -6,7 +6,7 @@ export interface ImageProps {
   public_id: string;
   format: string;
   blurDataUrl?: string;
-  tags?: string[];
+  tags?: Tag[];
 }
 
 export interface SharedModalProps {
@@ -36,4 +36,9 @@ export interface Schema {
 export interface Tag {
   id: string;
   text: string;
+}
+
+export interface Cake {
+  photo: string;
+  tags: string[];
 }

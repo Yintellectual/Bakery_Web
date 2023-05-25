@@ -123,10 +123,10 @@ const Home: NextPage = ({
                   {tags.map((tag) => {
                     return (
                       <span
-                        key={"tag_" + tag + public_id}
+                        key={"tag_" + tag.text + public_id}
                         className=" mx-1 rounded bg-white px-1 text-sm font-semibold text-black transition  "
                       >
-                        {tag}
+                        {tag.text}
                       </span>
                     );
                   })}
@@ -202,7 +202,7 @@ export async function getStaticProps() {
     reducedResults[i].blurDataUrl = imagesWithBlurDataUrls[i];
     const cake = await retrieveCakeByPhoto(reducedResults[i].public_id);
     if (cake) {
-      reducedResults[i].tags = cake.tags;
+      reducedResults[i].tags = cake.tags.map((tag) => ({ id: tag, text: tag }));
     } else {
       reducedResults[i].tags = [];
     }

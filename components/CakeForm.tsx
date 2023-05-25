@@ -1,4 +1,4 @@
-import { ImageProps, Schema, Tag } from "../utils/types";
+import { Cake, ImageProps, Schema, Tag } from "../utils/types";
 import React from "react";
 import updateCake from "../utils/rest/updateCake";
 import Input from "./tailwind_form/Input";
@@ -7,8 +7,8 @@ import Form from "./tailwind_form/Form";
 import TagsInput from "./tailwind_form/TagsInput";
 
 class CakeForm extends React.Component<
-  {},
-  { tags: Tag[]; suggestions: Tag[]; cake: {} }
+  { cakeImage: ImageProps; suggestions?: Tag[] },
+  { tags: Tag[]; suggestions: Tag[]; cake: Cake }
 > {
   /*
 export interface Schema {
@@ -31,19 +31,23 @@ export interface Attribute {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
-      tags: [
-        { id: "Thailand", text: "Thailand" },
-        { id: "India", text: "India" },
-        { id: "Vietnam", text: "Vietnam" },
-        { id: "Turkey", text: "Turkey" },
-      ],
-      suggestions: [
-        { id: "test", text: "test" },
-        { id: "3", text: "草莓" },
-        { id: "4", text: "大皇冠" },
-        { id: "5", text: "小皇冠" },
-      ],
-      cake: {},
+      tags: this.props.cakeImage.tags
+        ? this.props.cakeImage.tags
+        : [
+            { id: "Thailand", text: "Thailand" },
+            { id: "India", text: "India" },
+            { id: "Vietnam", text: "Vietnam" },
+            { id: "Turkey", text: "Turkey" },
+          ],
+      suggestions: this.props.suggestions
+        ? this.props.suggestions
+        : [
+            { id: "test", text: "test" },
+            { id: "3", text: "草莓" },
+            { id: "4", text: "大皇冠" },
+            { id: "5", text: "小皇冠" },
+          ],
+      cake: {} as Cake,
     };
   }
   private host = process.env.NEXT_PUBLIC_METADATA_SERVER;
@@ -51,13 +55,28 @@ export interface Attribute {
 
   private handleSubmit = async (event) => {
     event.preventDefault();
+    this.state.cake["photo"] = this.props.cakeImage.public_id;
+    this.state.cake["tags"] = this.state.tags.map((t) => t.text);
+
+    console.log("this.state.cake: ", this.state.cake);
+    let newCake = { ...this.state.cake };
     // @ts-ignore
-    console.log("this is: ", this);
+    updateCake(newCake).then();
+  };
+  private handleNameChange = function (event) {
+    this.state.cake["name"] = event.target.value();
   };
 
   render() {
     const fields = [];
-    fields.push(<Input key="username" label="名字" name="username" />);
+    fields.push(
+      <Input
+        key="name"
+        label="产品名称"
+        name="name"
+        onChange={this.handleNameChange}
+      />
+    );
     fields.push(
       <TagsInput
         key="tags"
