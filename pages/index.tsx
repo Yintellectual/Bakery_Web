@@ -3,16 +3,14 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import Logo from "../components/Icons/Logo";
 import Modal from "../components/Modal";
 import cloudinary from "../utils/cloudinary";
 import getBase64ImageUrl from "../utils/generateBlurPlaceholder";
-import type { ImageProps, Schema } from "../utils/types";
+import type { Cake, ImageProps, Schema } from "../utils/types";
 import { useLastViewedPhoto } from "../utils/useLastViewedPhoto";
 import retrieveCakeByPhoto from "../utils/rest/retrieveCakeByPhoto";
-import client from "../utils/rest/client";
 import cakeSchema from "../utils/rest/cakeSchema";
 import cakeDrawing from "../public/cake.jpg";
 import BakeryLogo from "../components/Icons/BakeryLogo";
@@ -26,8 +24,24 @@ const Home: NextPage = ({
   const router = useRouter();
   const { photoId } = router.query;
   const [lastViewedPhoto, setLastViewedPhoto] = useLastViewedPhoto();
-
   const lastViewedPhotoRef = useRef<HTMLAnchorElement>(null);
+
+  const [imageProps, setImageProps] = useState(images);
+
+  const handleCakeUpdate = function (cake: Cake) {
+    setImageProps(
+      imageProps.map((image) => {
+        if (image.public_id == cake.photo) {
+          return {
+            ...image,
+            tags: cake.tags.map((tag) => ({ id: tag, text: tag })),
+          };
+        } else {
+          return image;
+        }
+      })
+    );
+  };
 
   useEffect(() => {
     // This effect keeps track of the last viewed photo in the modal to keep the index page in sync when the user navigates back
@@ -53,11 +67,12 @@ const Home: NextPage = ({
       <main className="mx-auto max-w-[1960px] p-4">
         {photoId && (
           <Modal
-            images={images}
+            images={imageProps}
             onClose={() => {
               setLastViewedPhoto(photoId);
             }}
             cakeSchema={cakeSchema}
+            handleCakeUpdate={handleCakeUpdate}
           />
         )}
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
@@ -94,7 +109,7 @@ const Home: NextPage = ({
               Clone and Deploy
             </a>
           </div>
-          {images.map(({ id, public_id, format, blurDataUrl, tags }) => (
+          {imageProps.map(({ id, public_id, format, blurDataUrl, tags }) => (
             <Link
               key={id}
               href={`/?photoId=${id}`}

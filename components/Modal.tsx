@@ -10,10 +10,12 @@ export default function Modal({
   images,
   onClose,
   cakeSchema,
+  handleCakeUpdate,
 }: {
   images: ImageProps[];
   onClose?: () => void;
   cakeSchema: Schema;
+  handleCakeUpdate: Function;
 }) {
   let overlayRef = useRef();
   const router = useRouter();
@@ -81,6 +83,7 @@ export default function Modal({
         closeModal={handleClose}
         navigation={true}
         cakeSchema={cakeSchema}
+        handleCakeUpdate={handleCakeUpdate}
       />
     </Dialog>
   );

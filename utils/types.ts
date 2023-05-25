@@ -18,6 +18,7 @@ export interface SharedModalProps {
   navigation: boolean;
   direction?: number;
   cakeSchema?: Schema;
+  handleCakeUpdate: Function;
 }
 
 export interface Attribute {

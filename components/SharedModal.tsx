@@ -16,8 +16,6 @@ import downloadPhoto from "../utils/downloadPhoto";
 import { range } from "../utils/range";
 import type { ImageProps, SharedModalProps } from "../utils/types";
 import Twitter from "./Icons/Twitter";
-import client from "../utils/rest/client";
-import follow from "../utils/rest/follow";
 import CakeForm from "./CakeForm";
 
 export default function SharedModal({
@@ -29,6 +27,7 @@ export default function SharedModal({
   currentPhoto,
   direction,
   cakeSchema,
+  handleCakeUpdate,
 }: SharedModalProps) {
   const [loaded, setLoaded] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -136,7 +135,11 @@ export default function SharedModal({
                 style={showForm ? {} : { display: "none" }}
               >
                 <div className="mx-auto max-w-7xl px-20 py-24 sm:py-32 md:px-20">
-                  <CakeForm cakeImage={currentImage}></CakeForm>
+                  <CakeForm
+                    handleCakeUpdate={handleCakeUpdate}
+                    cakeImage={currentImage}
+                    toggleShowForm={toggleShowForm}
+                  ></CakeForm>
                 </div>
               </div>
               <div className="absolute right-0 top-0 flex items-center gap-2 p-3 text-white">

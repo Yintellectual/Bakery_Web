@@ -35,6 +35,9 @@ const Home: NextPage = ({
           currentPhoto={currentPhoto}
           index={index}
           cakeSchema={cakeSchema}
+          handleCakeUpdate={() => {
+            return false;
+          }}
         />
       </main>
     </>

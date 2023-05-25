@@ -9,10 +9,12 @@ export default function Carousel({
   index,
   currentPhoto,
   cakeSchema,
+  handleCakeUpdate,
 }: {
   index: number;
   currentPhoto: ImageProps;
   cakeSchema: Schema;
+  handleCakeUpdate: Function;
 }) {
   const router = useRouter();
   const [, setLastViewedPhoto] = useLastViewedPhoto();
@@ -51,6 +53,7 @@ export default function Carousel({
         closeModal={closeModal}
         navigation={false}
         cakeSchema={cakeSchema}
+        handleCakeUpdate={handleCakeUpdate}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { Cake, ImageProps, Schema, Tag } from "../utils/types";
+import { Cake, ImageProps, Tag } from "../utils/types";
 import React from "react";
 import updateCake from "../utils/rest/updateCake";
 import Input from "./tailwind_form/Input";
@@ -7,7 +7,12 @@ import Form from "./tailwind_form/Form";
 import TagsInput from "./tailwind_form/TagsInput";
 
 class CakeForm extends React.Component<
-  { cakeImage: ImageProps; suggestions?: Tag[] },
+  {
+    cakeImage: ImageProps;
+    suggestions?: Tag[];
+    handleCakeUpdate: Function;
+    toggleShowForm?: Function;
+  },
   { tags: Tag[]; suggestions: Tag[]; cake: Cake }
 > {
   /*
@@ -47,25 +52,28 @@ export interface Attribute {
             { id: "4", text: "大皇冠" },
             { id: "5", text: "小皇冠" },
           ],
-      cake: {} as Cake,
+      cake: {
+        photo: this.props.cakeImage.public_id,
+        tags: this.props.cakeImage.tags.map((t) => t.text),
+      },
     };
   }
-  private host = process.env.NEXT_PUBLIC_METADATA_SERVER;
-  private root = process.env.NEXT_PUBLIC_METADATA_ROOT;
 
   private handleSubmit = async (event) => {
     event.preventDefault();
-    this.state.cake["photo"] = this.props.cakeImage.public_id;
-    this.state.cake["tags"] = this.state.tags.map((t) => t.text);
-
-    console.log("this.state.cake: ", this.state.cake);
     let newCake = { ...this.state.cake };
-    // @ts-ignore
-    updateCake(newCake).then();
+    newCake.tags = this.state.tags.map((t) => t.text);
+    this.setState({
+      cake: newCake,
+    });
+    updateCake(this.state.cake).then(() => {
+      if (this.props.toggleShowForm) {
+        this.props.toggleShowForm();
+      }
+      this.props.handleCakeUpdate(this.state.cake);
+    });
   };
-  private handleNameChange = function (event) {
-    this.state.cake["name"] = event.target.value();
-  };
+  private handleNameChange = function (event) {};
 
   render() {
     const fields = [];
